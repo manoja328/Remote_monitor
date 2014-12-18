@@ -19,14 +19,16 @@ IPAddress ip(192,168,3, 5);
 EthernetServer server(80);
 String POStreq;
 
-#define OUT1 A0
-#define OUT2 A1
-#define OUT3 2
-
+#define OUT1 2
+#define OUT2 3
+#define OUT3 4
+const int pingPin = A0;
 void setup() {
   pinMode(OUT1,OUTPUT);  
   pinMode(OUT2,OUTPUT);
   pinMode(OUT3,OUTPUT);
+  
+    pinMode(pingPin,OUTPUT);
   
  // Open serial communications and wait for port to open:
   Serial.begin(9600);
@@ -41,6 +43,34 @@ void setup() {
   Serial.print("server is at ");
   Serial.println(Ethernet.localIP());
 }
+
+
+
+long find_distance(){
+  
+
+
+  long duration;
+  pinMode(pingPin, OUTPUT);
+  digitalWrite(pingPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pingPin, HIGH);
+  delayMicroseconds(5);
+  digitalWrite(pingPin, LOW);
+  
+   pinMode(pingPin, INPUT);
+  duration = pulseIn(pingPin, HIGH);
+    // The speed of sound is 340 m/s or 29 microseconds per centimeter.
+  // The ping travels out and back, so to find the distance of the
+  // object we take half of the distance travelled.
+  return 10*duration / 29 / 2;
+  
+  
+  
+}  
+
+
+
 
 
 void loop() {
@@ -102,14 +132,14 @@ void ProcessCheckbox(EthernetClient client)
           client.println("Connection: close");
           client.println();
             
-          // output the value of each analog input pin
-          for (int analogChannel = 2; analogChannel <= 3; analogChannel++) {
-            int sensorReading = analogRead(analogChannel);
-            client.print(sensorReading);
-            if (analogChannel<3)
-               client.print(",");          
-                  
-          }
+
+
+ 
+            client.print(find_distance());
+            client.print(",");  
+            client.print(analogRead(2));
+       
+
           
           client.print(",");
           //Serial.print(digitalRead(OUT1));
