@@ -2,7 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtCore>
+#include "dialog.h"
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QTimer>
+
+
 namespace Ui {
     class MainWindow;
 }
@@ -14,25 +20,28 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void sendRequest( QString a);
-
+    void showoutstas();
 
 private:
     Ui::MainWindow *ui;
+    Dialog *mydialog;
+    //QNetworkAccessManager *manager ;
+
+
+
 
 private slots:
     void on_out3_off_clicked();
     void on_out3_on_clicked();
     void on_out2_off_clicked();
     void on_out2_on_clicked();
-    void on_pushButton_2_clicked();
-    void on_pushButton_clicked();
+    void on_out1_off_clicked();
+    void on_out1_on_clicked();
+    void on_settingsbut_clicked();
+    void on_comboBox_activated(int index);
+    void loadsettings();
     void updatetime();
-
+    void sendRequest(QString);
 };
-
-
-
-
 
 #endif // MAINWINDOW_H

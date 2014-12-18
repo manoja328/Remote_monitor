@@ -1,8 +1,7 @@
 <RCC>
     <qresource prefix="/images">
-        <file>a.png</file>
-        <file>b.png</file>
-        <file>c.png</file>
-        <file>ping.wav</file>
+        <file>black.png</file>
+        <file>green.png</file>
+        <file>red.png</file>
     </qresource>
 </RCC>

@@ -1,21 +1,24 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-09-23T11:53:17
+# Project created by QtCreator 2014-05-12T22:22:20
 #
 #-------------------------------------------------
 
 QT       += core gui network phonon
 
-TARGET = ptn_remote
+TARGET = PTNcontroller
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    dialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    dialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui
 
 RESOURCES += \
     myres.qrc
