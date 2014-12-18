@@ -1,16 +1,24 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QCoreApplication>
 #include <QStringList>
-#include "dialog.h"
-#include <QPainter>
+#include <QDebug>
+#include <QSettings>
 #define UPdateTime 2  // in seconds
 
+
+/*
+#define SITE_1 "http://192.168.1.2/"
+#define SITE_2 "http://192.168.1.3/"
+#define SITE_3 "http://192.168.1.4/"
+*/
 
 QString SITE_1 = "http://192.168.3.5/";
 //QString SITE_1 "http://192.168.106.1:8000/first";
 QString SITE_2 = "http://192.168.106.1:8000/sec";
 QString SITE_3 = "http://192.168.106.1:8000/third";
-
 
 
 QList<QString> MycolorList;
@@ -25,21 +33,23 @@ QTimer *mytimer;
 QNetworkReply *reply;
 QNetworkAccessManager *manager;
 
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowTitle(tr("PTN Remote Controller")); // window title
 
-    /*
-    mydialog =new Dialog(this);
-    mydialog->setModal(true);
-    mydialog->setWindowModality((Qt::WindowModal));
-*/
+
+    ui->comboBox_2->setCurrentIndex(0);
+    loadsettings2();
+
+    ui->lineEdit->installEventFilter(this);
+    ui->lineEdit_2->installEventFilter(this);
+    ui->lineEdit_3->installEventFilter(this);
+    ui->lineEdit_4->installEventFilter(this);
+    ui->lineEdit_5->installEventFilter(this);
+    ui->lineEdit_6->installEventFilter(this);
+
 
     //ui->frame_1->setHidden(true);
     //ui->frame_1->setDisabled(true);
@@ -49,10 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadsettings();
 
+    setWindowTitle(tr("PTN Remote Controller")); // window title
 
-    ui->loading1->hide();
-    ui->loading2->hide();
-    ui->loading3->hide();
 
     mytimer= new QTimer(this);
     mytimer->setInterval(UPdateTime*1000);
@@ -65,51 +73,24 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+
+
 }
-
-
-QPixmap MainWindow::colorSwatch( const QColor color )
-{
-    QPixmap pixmap(20, 20 );
-    pixmap.fill(Qt::white);
-    QPainter painter;
-    painter.begin( &pixmap );
-    painter.setBrush( color );
-    painter.drawEllipse( 0, 0,15,15 );
-    painter.end();
-    return pixmap;
-}
-
-
 
 void MainWindow::on_comboBox_activated(int index)
 {
+
     loadsettings();
+
 
 }
 
 
-void MainWindow::on_settingsbut_clicked()
-{
-
-    Dialog *mydialog=new Dialog(this);
-    mydialog->setModal(true);
-    mydialog->setWindowModality((Qt::WindowModal));
-    mydialog->exec();
-    delete mydialog;
-    loadsettings();
-
-
-
-
-
-}
 
 
 
 void MainWindow::loadsettings()
 {
-
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,"mycompany","myapp",this);
     settings.beginGroup("Sites");
@@ -162,7 +143,7 @@ void MainWindow::loadsettings()
 
     }
 
-    ui->label->setText(ui->comboBox->currentText());
+
 
 
 
@@ -250,7 +231,7 @@ void  MainWindow::sendRequest( QString url){
             ui->frame_1->setHidden(true);
             ui->frame_2->setHidden(true);
             ui->frame_3->setHidden(true);
-            ui->error_label->setText("Failure !! check the LAN connection");
+            ui->error_label->setText("Failure !! check the LAN connection ");
 
         }
 
@@ -274,18 +255,14 @@ void  MainWindow::sendRequest( QString url){
 void MainWindow::on_out1_on_clicked()
 {
     mytimer->stop();
-    ui->loading1->show();
     sendRequest( siteaddr + QString("?out1=1"));
-    ui->loading1->hide();
     mytimer->start();
 }
 
 void MainWindow::on_out1_off_clicked()
 {
     mytimer->stop();
-    ui->loading1->show();
     sendRequest( siteaddr + QString("?out1=0"));
-    ui->loading1->hide();
     mytimer->start();
 
 }
@@ -293,9 +270,7 @@ void MainWindow::on_out1_off_clicked()
 void MainWindow::on_out2_on_clicked()
 {
     mytimer->stop();
-    ui->loading2->show();
     sendRequest( siteaddr + QString("?out2=1"));
-    ui->loading2->hide();
     mytimer->start();
 
 }
@@ -303,9 +278,7 @@ void MainWindow::on_out2_on_clicked()
 void MainWindow::on_out2_off_clicked()
 {
     mytimer->stop();
-    ui->loading2->show();
     sendRequest( siteaddr + QString("?out2=0"));
-    ui->loading2->hide();
     mytimer->start();
 
 }
@@ -313,9 +286,7 @@ void MainWindow::on_out2_off_clicked()
 void MainWindow::on_out3_on_clicked()
 {
     mytimer->stop();
-    ui->loading3->show();
     sendRequest( siteaddr + QString("?out3=1"));
-    ui->loading3->hide();
     mytimer->start();
 
 }
@@ -323,9 +294,7 @@ void MainWindow::on_out3_on_clicked()
 void MainWindow::on_out3_off_clicked()
 {
     mytimer->stop();
-    ui->loading3->show();
     sendRequest( siteaddr + QString("?out3=0"));
-    ui->loading3->hide();
     mytimer->start();
 
 }
@@ -336,14 +305,14 @@ void MainWindow::showoutstas(){
     if (ui->frame_1->isEnabled()){
 
         if (out_stats & 0x01){
-            ui->out1_on_label->setPixmap(colorSwatch(Qt::green));
-            ui->out1_off_label->setPixmap(colorSwatch(Qt::black));
+            ui->out1_on_label->setPixmap(QPixmap(":/images/red.png"));
+            ui->out1_off_label->setPixmap(QPixmap(":/images/black.png"));
 
         }
 
         else{
-            ui->out1_on_label->setPixmap(colorSwatch(Qt::black));
-            ui->out1_off_label->setPixmap(colorSwatch(Qt::green));
+            ui->out1_on_label->setPixmap(QPixmap(":/images/black.png"));
+            ui->out1_off_label->setPixmap(QPixmap(":/images/red.png"));
 
 
         }
@@ -352,14 +321,14 @@ void MainWindow::showoutstas(){
     if (ui->frame_2->isEnabled()){
 
         if (out_stats & 0x02){
-            ui->out2_on_label->setPixmap(colorSwatch(Qt::green));
-            ui->out2_off_label->setPixmap(colorSwatch(Qt::black));
+            ui->out2_on_label->setPixmap(QPixmap(":/images/red.png"));
+            ui->out2_off_label->setPixmap(QPixmap(":/images/black.png"));
 
         }
 
         else{
-            ui->out2_on_label->setPixmap(colorSwatch(Qt::black));
-            ui->out2_off_label->setPixmap(colorSwatch(Qt::green));
+            ui->out2_on_label->setPixmap(QPixmap(":/images/black.png"));
+            ui->out2_off_label->setPixmap(QPixmap(":/images/red.png"));
 
 
         }
@@ -370,14 +339,14 @@ void MainWindow::showoutstas(){
     if (ui->frame_3->isEnabled()){
 
         if (out_stats & 0x04){
-            ui->out3_on_label->setPixmap(colorSwatch(Qt::green));
-            ui->out3_off_label->setPixmap(colorSwatch(Qt::black));
+            ui->out3_on_label->setPixmap(QPixmap(":/images/red.png"));
+            ui->out3_off_label->setPixmap(QPixmap(":/images/black.png"));
 
         }
 
         else{
-            ui->out3_on_label->setPixmap(colorSwatch(Qt::black));
-            ui->out3_off_label->setPixmap(colorSwatch(Qt::green));
+            ui->out3_on_label->setPixmap(QPixmap(":/images/black.png"));
+            ui->out3_off_label->setPixmap(QPixmap(":/images/red.png"));
 
         }
 
@@ -385,3 +354,147 @@ void MainWindow::showoutstas(){
 
 
 }
+
+
+
+void MainWindow::on_savebuttons_clicked()
+{
+
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,"mycompany","myapp",this);
+    settings.beginGroup("Sites");
+
+    if (!ui->lineEdit->text().isEmpty())
+        settings.setValue("site1",ui->lineEdit->text());
+    if (!ui->lineEdit_2->text().isEmpty())
+        settings.setValue("site2",ui->lineEdit_2->text());
+    if (!ui->lineEdit_3->text().isEmpty())
+        settings.setValue("site3",ui->lineEdit_3->text());
+    settings.endGroup();
+
+
+    switch (ui->comboBox_2->currentIndex()){
+    case 0:
+        settings.beginGroup("Sites1_out");
+        if (!ui->lineEdit_4->text().isEmpty())
+            settings.setValue("out1",ui->lineEdit_4->text());
+        if (!ui->lineEdit_5->text().isEmpty())
+            settings.setValue("out2",ui->lineEdit_5->text());
+        if (!ui->lineEdit_6->text().isEmpty())
+            settings.setValue("out3",ui->lineEdit_6->text());
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
+        settings.endGroup();
+        break;
+
+    case 1:
+        settings.beginGroup("Sites2_out");
+        if (!ui->lineEdit_4->text().isEmpty())
+            settings.setValue("out1",ui->lineEdit_4->text());
+        if (!ui->lineEdit_5->text().isEmpty())
+            settings.setValue("out2",ui->lineEdit_5->text());
+        if (!ui->lineEdit_6->text().isEmpty())
+            settings.setValue("out3",ui->lineEdit_6->text());
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
+        settings.endGroup();
+        break;
+
+    case 2:
+        settings.beginGroup("Sites3_out");
+        if (!ui->lineEdit_4->text().isEmpty())
+            settings.setValue("out1",ui->lineEdit_4->text());
+        if (!ui->lineEdit_5->text().isEmpty())
+            settings.setValue("out2",ui->lineEdit_5->text());
+        if (!ui->lineEdit_6->text().isEmpty())
+            settings.setValue("out3",ui->lineEdit_6->text());
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
+        settings.endGroup();
+        break;
+
+
+    }
+
+}
+
+void MainWindow::on_comboBox_2_activated(int index)
+{
+    loadsettings2();
+}
+
+
+
+
+void MainWindow::loadsettings2()
+{
+
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,"mycompany","myapp",this);
+    settings.beginGroup("Sites");
+
+    ui->lineEdit->setText(settings.value("site1","site1").toString());
+    ui->lineEdit_2->setText(settings.value("site2","site2").toString());
+    ui->lineEdit_3->setText(settings.value("site3","site3").toString());
+
+    settings.endGroup();
+
+
+    switch (ui->comboBox_2->currentIndex()){
+
+    case 0:
+        settings.beginGroup("Sites1_out");
+        ui->lineEdit_4->setText(settings.value("out1","out1").toString());
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
+        settings.endGroup();
+        break;
+
+    case 1:
+        settings.beginGroup("Sites2_out");
+        ui->lineEdit_4->setText(settings.value("out1","out1").toString());
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
+        settings.endGroup();
+        break;
+
+    case 2:
+        settings.beginGroup("Sites3_out");
+        ui->lineEdit_4->setText(settings.value("out1","out1").toString());
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
+        settings.endGroup();
+        break;
+
+
+    }
+
+
+}
+
+
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if(event->type() == QEvent::FocusIn) {
+        QTimer::singleShot(0, obj, SLOT(selectAll()));
+        return false;
+    } else {
+        return QObject::eventFilter(obj, event);
+    }
+}
+
+
+
+
+
