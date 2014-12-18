@@ -1,12 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-05-12T22:22:20
+# Project created by QtCreator 2014-11-19T18:58:23
 #
 #-------------------------------------------------
 
-QT       += core gui network phonon
+QT       += core gui network
 
-TARGET = PTNcontroller
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = qtptn
 TEMPLATE = app
 
 
@@ -20,5 +22,4 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     dialog.ui
 
-RESOURCES += \
-    myres.qrc
+RESOURCES +=

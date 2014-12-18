@@ -2,15 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "dialog.h"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTimer>
 
-
 namespace Ui {
-    class MainWindow;
+class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -21,13 +19,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void showoutstas();
+    QPixmap colorSwatch( const QColor color );
 
 private:
     Ui::MainWindow *ui;
-    Dialog *mydialog;
-    //QNetworkAccessManager *manager ;
-
-
 
 
 private slots:

@@ -3,8 +3,8 @@
 #include <QTimer>
 
 Dialog::Dialog(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::Dialog)
+    QDialog(parent),
+    ui(new Ui::Dialog)
 {
 
     ui->setupUi(this);
@@ -47,138 +47,55 @@ void Dialog::on_pushButton_clicked()
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,"mycompany","myapp",this);
     settings.beginGroup("Sites");
 
-    if (ui->lineEdit->text() !="")
+    if (!ui->lineEdit->text().isEmpty())
         settings.setValue("site1",ui->lineEdit->text());
-    if (ui->lineEdit_2->text() !="")
+    if (!ui->lineEdit_2->text().isEmpty())
         settings.setValue("site2",ui->lineEdit_2->text());
-    if (ui->lineEdit_3->text() !="")
+    if (!ui->lineEdit_3->text().isEmpty())
         settings.setValue("site3",ui->lineEdit_3->text());
     settings.endGroup();
 
 
     switch (ui->comboBox->currentIndex()){
-
     case 0:
         settings.beginGroup("Sites1_out");
-        if (ui->lineEdit_4->text() !="")
+        if (!ui->lineEdit_4->text().isEmpty())
             settings.setValue("out1",ui->lineEdit_4->text());
-
-        if (ui->checkBox1->isChecked()){
-
-            settings.setValue("out1_status","enabled");
-        }
-        else{
-            settings.setValue("out1_status","disabled");
-
-        }
-
-        if (ui->lineEdit_5->text() !="")
+        if (!ui->lineEdit_5->text().isEmpty())
             settings.setValue("out2",ui->lineEdit_5->text());
-
-
-        if (ui->checkBox2->isChecked()){
-
-            settings.setValue("out2_status","enabled");
-        }
-        else{
-            settings.setValue("out2_status","disabled");
-
-        }
-
-        if (ui->lineEdit_6->text() !="")
+        if (!ui->lineEdit_6->text().isEmpty())
             settings.setValue("out3",ui->lineEdit_6->text());
-
-        if (ui->checkBox3->isChecked()){
-
-            settings.setValue("out3_status","enabled");
-        }
-        else{
-            settings.setValue("out3_status","disabled");
-
-        }
-
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
         settings.endGroup();
         break;
 
     case 1:
         settings.beginGroup("Sites2_out");
-        if (ui->lineEdit_4->text() !="")
+        if (!ui->lineEdit_4->text().isEmpty())
             settings.setValue("out1",ui->lineEdit_4->text());
-
-        if (ui->checkBox1->isChecked()){
-
-            settings.setValue("out1_status","enabled");
-        }
-        else{
-            settings.setValue("out1_status","disabled");
-
-        }
-
-        if (ui->lineEdit_5->text() !="")
+        if (!ui->lineEdit_5->text().isEmpty())
             settings.setValue("out2",ui->lineEdit_5->text());
-
-
-        if (ui->checkBox2->isChecked()){
-
-            settings.setValue("out2_status","enabled");
-        }
-        else{
-            settings.setValue("out2_status","disabled");
-
-        }
-
-        if (ui->lineEdit_6->text() !="")
+        if (!ui->lineEdit_6->text().isEmpty())
             settings.setValue("out3",ui->lineEdit_6->text());
-
-        if (ui->checkBox3->isChecked()){
-
-            settings.setValue("out3_status","enabled");
-        }
-        else{
-            settings.setValue("out3_status","disabled");
-
-        }
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
         settings.endGroup();
         break;
 
     case 2:
         settings.beginGroup("Sites3_out");
-        if (ui->lineEdit_4->text() !="")
+        if (!ui->lineEdit_4->text().isEmpty())
             settings.setValue("out1",ui->lineEdit_4->text());
-
-        if (ui->checkBox1->isChecked()){
-
-            settings.setValue("out1_status","enabled");
-        }
-        else{
-            settings.setValue("out1_status","disabled");
-
-        }
-
-        if (ui->lineEdit_5->text() !="")
+        if (!ui->lineEdit_5->text().isEmpty())
             settings.setValue("out2",ui->lineEdit_5->text());
-
-
-        if (ui->checkBox2->isChecked()){
-
-            settings.setValue("out2_status","enabled");
-        }
-        else{
-            settings.setValue("out2_status","disabled");
-
-        }
-
-        if (ui->lineEdit_6->text() !="")
+        if (!ui->lineEdit_6->text().isEmpty())
             settings.setValue("out3",ui->lineEdit_6->text());
-
-        if (ui->checkBox3->isChecked()){
-
-            settings.setValue("out3_status","enabled");
-        }
-        else{
-            settings.setValue("out3_status","disabled");
-
-        }
+        settings.setValue("out1_status",ui->checkBox1->isChecked()?1:0);
+        settings.setValue("out2_status",ui->checkBox2->isChecked()?1:0);
+        settings.setValue("out3_status",ui->checkBox3->isChecked()?1:0);
         settings.endGroup();
         break;
 
@@ -210,33 +127,33 @@ void Dialog::loadsettings()
     case 0:
         settings.beginGroup("Sites1_out");
         ui->lineEdit_4->setText(settings.value("out1","out1").toString());
-        ui->lineEdit_5->setText(settings.value("out2","out1").toString());
-        ui->lineEdit_6->setText(settings.value("out3","out1").toString());
-        ui->checkBox1->setChecked(settings.value("out1_status","enabled").toString()== QLatin1String("enabled"));
-        ui->checkBox2->setChecked(settings.value("out2_status","enabled").toString()== QLatin1String("enabled"));
-        ui->checkBox3->setChecked(settings.value("out3_status","enabled").toString()== QLatin1String("enabled"));
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
         settings.endGroup();
         break;
 
     case 1:
         settings.beginGroup("Sites2_out");
-        ui->lineEdit_4->setText(settings.value("out1","").toString());
-        ui->lineEdit_5->setText(settings.value("out2","").toString());
-        ui->lineEdit_6->setText(settings.value("out3","").toString());
-        ui->checkBox1->setChecked(settings.value("out1_status","").toString()== QLatin1String("enabled"));
-        ui->checkBox2->setChecked(settings.value("out2_status","").toString()== QLatin1String("enabled"));
-        ui->checkBox3->setChecked(settings.value("out3_status","").toString()== QLatin1String("enabled"));
+        ui->lineEdit_4->setText(settings.value("out1","out1").toString());
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
         settings.endGroup();
         break;
 
     case 2:
         settings.beginGroup("Sites3_out");
-        ui->lineEdit_4->setText(settings.value("out1","").toString());
-        ui->lineEdit_5->setText(settings.value("out2","").toString());
-        ui->lineEdit_6->setText(settings.value("out3","").toString());
-        ui->checkBox1->setChecked(settings.value("out1_status","").toString()== QLatin1String("enabled"));
-        ui->checkBox2->setChecked(settings.value("out2_status","").toString()== QLatin1String("enabled"));
-        ui->checkBox3->setChecked(settings.value("out3_status","").toString()== QLatin1String("enabled"));
+        ui->lineEdit_4->setText(settings.value("out1","out1").toString());
+        ui->lineEdit_5->setText(settings.value("out2","out2").toString());
+        ui->lineEdit_6->setText(settings.value("out3","out3").toString());
+        ui->checkBox1->setChecked(settings.value("out1_status",1).toBool());
+        ui->checkBox2->setChecked(settings.value("out2_status",1).toBool());
+        ui->checkBox3->setChecked(settings.value("out3_status",1).toBool());
         settings.endGroup();
         break;
 
